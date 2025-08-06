@@ -7,6 +7,7 @@ let visitOutcomes = [];
 let visitPurposes = [];
 let visitTypes = [];
 
+// تحديد جميع عناصر النموذج بشكل مباشر لضمان جمع بياناتها
 const visitForm = document.getElementById('visitForm');
 const salesRepNameSelect = document.getElementById('salesRepName');
 const customerNameInput = document.getElementById('customerName');
@@ -222,7 +223,6 @@ async function handleSubmit(event) {
   submitBtn.disabled = true;
   loadingSpinner.classList.remove('hidden');
 
-  const formData = new FormData(visitForm);
   const now = new Date();
 
   // Find the customer code based on the customer name
@@ -288,8 +288,8 @@ async function handleSubmit(event) {
   dataToSubmit.availableSweets = available['الحلويات'].join(', ');
   dataToSubmit.unavailableSweets = unavailable['الحلويات'].join(', ');
 
-  // إضافة log للتأكد من البيانات التي سيتم إرسالها
-  console.log('Data to Submit:', JSON.stringify(dataToSubmit, null, 2));
+  // Logging to help with debugging
+  console.log('Final data to submit:', dataToSubmit);
 
   try {
     const response = await fetch(GOOGLE_SHEETS_WEB_APP_URL, {
@@ -300,7 +300,6 @@ async function handleSubmit(event) {
       body: JSON.stringify(dataToSubmit),
     });
 
-    // Check if the response is ok before processing
     if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -312,7 +311,6 @@ async function handleSubmit(event) {
       showSuccessMessage();
       visitForm.reset();
       productsDisplayDiv.innerHTML = '';
-      // Reset product category checkboxes
       const checkboxes = productCategoriesDiv.querySelectorAll('input[type="checkbox"]');
       checkboxes.forEach(c => c.checked = false);
     } else {

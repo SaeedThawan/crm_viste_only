@@ -7,7 +7,6 @@ let visitOutcomes = [];
 let visitPurposes = [];
 let visitTypes = [];
 
-// تحديد جميع عناصر النموذج بشكل مباشر لضمان جمع بياناتها
 const visitForm = document.getElementById('visitForm');
 const salesRepNameSelect = document.getElementById('salesRepName');
 const customerNameInput = document.getElementById('customerName');
@@ -23,7 +22,6 @@ const productsDisplayDiv = document.getElementById('productsDisplay');
 const submitBtn = document.getElementById('submitBtn');
 const loadingSpinner = document.getElementById('loadingSpinner');
 
-// ✅ SweetAlert بدل showMessageBox
 function showSuccessMessage() {
   Swal.fire({
     title: '✅ تم الإرسال!',
@@ -133,7 +131,6 @@ function setupProductCategories() {
   productCategoriesDiv.innerHTML = '';
   productCategories = {};
   productsData.forEach(product => {
-    // Combine 5Star and Tiara into one category
     const categoryName = (product.Category === '5فايف ستار' || product.Category === 'تيارا') ? '5Star_Tiara' : product.Category;
     if (!productCategories[categoryName]) productCategories[categoryName] = [];
     productCategories[categoryName].push(product);
@@ -224,8 +221,6 @@ async function handleSubmit(event) {
   loadingSpinner.classList.remove('hidden');
 
   const now = new Date();
-
-  // Find the customer code based on the customer name
   const selectedCustomer = customersMain.find(c => c.Customer_Name_AR === customerNameInput.value);
   const customerCode = selectedCustomer ? selectedCustomer.Customer_Code : '';
 
@@ -245,7 +240,6 @@ async function handleSubmit(event) {
     notes: notesInput.value || ''
   };
 
-  // Group products by category and status
   const available = {
     'المشروبات': [],
     '5Star_Tiara': [],
@@ -276,7 +270,6 @@ async function handleSubmit(event) {
     }
   });
 
-  // Assign the product lists to the data object
   dataToSubmit.availableDrinks = available['المشروبات'].join(', ');
   dataToSubmit.unavailableDrinks = unavailable['المشروبات'].join(', ');
   dataToSubmit.available5StarTiara = available['5Star_Tiara'].join(', ');
@@ -288,7 +281,6 @@ async function handleSubmit(event) {
   dataToSubmit.availableSweets = available['الحلويات'].join(', ');
   dataToSubmit.unavailableSweets = unavailable['الحلويات'].join(', ');
 
-  // Logging to help with debugging
   console.log('Final data to submit:', dataToSubmit);
 
   try {

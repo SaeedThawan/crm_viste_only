@@ -14,6 +14,9 @@ const customerListDatalist = document.getElementById('customerList');
 const visitTypeSelect = document.getElementById('visitType');
 const visitPurposeSelect = document.getElementById('visitPurpose');
 const visitOutcomeSelect = document.getElementById('visitOutcome');
+const entryUserNameInput = document.getElementById('entryUserName');
+const customerTypeInput = document.getElementById('customerType');
+const notesInput = document.getElementById('notes');
 const productCategoriesDiv = document.getElementById('productCategories');
 const productsDisplayDiv = document.getElementById('productsDisplay');
 const submitBtn = document.getElementById('submitBtn');
@@ -223,23 +226,23 @@ async function handleSubmit(event) {
   const now = new Date();
 
   // Find the customer code based on the customer name
-  const selectedCustomer = customersMain.find(c => c.Customer_Name_AR === formData.get('customerName'));
+  const selectedCustomer = customersMain.find(c => c.Customer_Name_AR === customerNameInput.value);
   const customerCode = selectedCustomer ? selectedCustomer.Customer_Code : '';
 
   const dataToSubmit = {
     visitID: generateVisitID(),
     customerCode: customerCode,
-    customerName: formData.get('customerName'),
-    salesRepName: formData.get('salesRepName'),
+    customerName: customerNameInput.value,
+    salesRepName: salesRepNameSelect.value,
     visitDate: formatDate(now),
     visitTime: formatTime(now),
-    visitPurpose: formData.get('visitPurpose'),
-    visitOutcome: formData.get('visitOutcome'),
-    visitType: formData.get('visitType'),
-    entryUserName: formData.get('entryUserName'),
+    visitPurpose: visitPurposeSelect.value,
+    visitOutcome: visitOutcomeSelect.value,
+    visitType: visitTypeSelect.value,
+    entryUserName: entryUserNameInput.value,
     timestamp: formatTimestamp(now),
-    customerType: formData.get('customerType'),
-    notes: formData.get('notes') || ''
+    customerType: customerTypeInput.value,
+    notes: notesInput.value || ''
   };
 
   // Group products by category and status
@@ -285,22 +288,36 @@ async function handleSubmit(event) {
   dataToSubmit.availableSweets = available['الحلويات'].join(', ');
   dataToSubmit.unavailableSweets = unavailable['الحلويات'].join(', ');
 
+  // إضافة log للتأكد من البيانات التي سيتم إرسالها
+  console.log('Data to Submit:', JSON.stringify(dataToSubmit, null, 2));
+
   try {
     const response = await fetch(GOOGLE_SHEETS_WEB_APP_URL, {
       method: 'POST',
-      mode: 'no-cors',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(dataToSubmit),
     });
 
-    showSuccessMessage();
-    visitForm.reset();
-    productsDisplayDiv.innerHTML = '';
-    // Reset product category checkboxes
-    const checkboxes = productCategoriesDiv.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(c => c.checked = false);
+    // Check if the response is ok before processing
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log('Server response:', result);
+    
+    if (result.success) {
+      showSuccessMessage();
+      visitForm.reset();
+      productsDisplayDiv.innerHTML = '';
+      // Reset product category checkboxes
+      const checkboxes = productCategoriesDiv.querySelectorAll('input[type="checkbox"]');
+      checkboxes.forEach(c => c.checked = false);
+    } else {
+      showErrorMessage(result.error);
+    }
 
   } catch (error) {
     console.error('فشل الإرسال:', error);

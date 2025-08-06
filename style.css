@@ -1,0 +1,194 @@
+/* 🌐 الخطوط والأساس العام */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
+body {
+  font-family: 'Cairo', 'Inter', sans-serif;
+  background-color: #f3f4f6;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+
+/* 🧾 تنسيق الحاوية */
+.container {
+  background-color: #ffffff;
+  padding: 2.5rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  max-width: 900px;
+  width: 100%;
+  margin-top: 2rem;
+  animation: fadeInContainer 0.5s ease-in-out;
+}
+
+/* 🧠 تأثير دخول النموذج */
+@keyframes fadeInContainer {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 🧰 تنسيق الحقول */
+.form-group label {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  color: #4b5563;
+  background-color: #f9fafb;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.form-group input:valid,
+.form-group select:valid,
+.form-group textarea:valid {
+  border-color: #10b981;
+}
+
+/* 📦 المنتجات */
+.product-item {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  animation: fadeInProduct 0.4s ease-in-out;
+}
+
+@keyframes fadeInProduct {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.product-item label {
+  font-weight: 500;
+  color: #374151;
+}
+
+.radio-group {
+  display: flex;
+  gap: 1rem;
+}
+
+.radio-group input[type="radio"] {
+  margin-left: 0.5rem;
+  transform: scale(1.2);
+}
+
+/* 🟣 زر الإرسال */
+.btn-primary {
+  background-color: #4f46e5;
+  color: white;
+  padding: 0.85rem 1.75rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+}
+
+.btn-primary:hover {
+  background-color: #4338ca;
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  background-color: #3730a3;
+  transform: translateY(0);
+}
+
+/* 🔄 سبينر التحميل */
+.loading-spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #fff;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 0.5rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 📱 تحسين للموبايل */
+@media (max-width: 768px) {
+  .container {
+    padding: 1.5rem;
+    margin-top: 1rem;
+  }
+  .btn-primary {
+    width: 100%;
+    font-size: 1rem;
+    padding: 0.75rem 1.5rem;
+  }
+  .product-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .radio-group {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+/* 🌙 تحضير الوضع الداكن */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #111827;
+    color: #f3f4f6;
+  }
+  .container {
+    background-color: #1f2937;
+    box-shadow: none;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    background-color: #374151;
+    color: #f3f4f6;
+    border-color: #4b5563;
+  }
+  .product-item {
+    background-color: #2d3748;
+    border-color: #4b5563;
+    color: #f3f4f6;
+  }
+  .product-item label {
+    color: #f3f4f6;
+  }
+  .radio-group label {
+    color: #f3f4f6;
+  }
+  .radio-group input[type="radio"] {
+    accent-color: #6366f1;
+  }
+}

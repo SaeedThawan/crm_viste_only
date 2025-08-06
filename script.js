@@ -1,4 +1,4 @@
-const GOOGLE_SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbybEDmO1IUU5-1-igS3pOpwwNqCwjnvWgLaOECj6TPYTVPIAwsnWVKritrKA7p5gL60BQ/exec';
+const GOOGLE_SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyzfhc9PMUUQ9Ty3hopsrYmd1XLZAhAr0nqZK1zfg2qYyZ079TPuPQMRdqY2jv6Ui4xVw/exec';
 
 let productsData = [];
 let salesRepresentatives = [];
@@ -66,6 +66,7 @@ function formatTime(date) {
 function formatTimestamp(date) {
   return date.toLocaleString('ar-SA', { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
 }
+
 async function fetchJsonData(url) {
   try {
     const response = await fetch(url);
@@ -131,14 +132,15 @@ function setupProductCategories() {
   productCategoriesDiv.innerHTML = '';
   productCategories = {};
   productsData.forEach(product => {
-    const categoryName = (product.Category === '5فايف ستار' || product.Category === 'تيارا') ? '5Star_Tiara' : product.Category;
+    const categoryName = product.Category;
     if (!productCategories[categoryName]) productCategories[categoryName] = [];
     productCategories[categoryName].push(product);
   });
 
   const categoryNames = {
     'المشروبات': 'Drinks',
-    '5Star_Tiara': '5Star_Tiara',
+    '5فايف ستار': '5Star',
+    'تيارا': 'Tiara',
     'البسكويت': 'Biscuits',
     'الشوكولاتة': 'Chocolates',
     'الحلويات': 'Sweets'
@@ -242,14 +244,16 @@ async function handleSubmit(event) {
 
   const available = {
     'المشروبات': [],
-    '5Star_Tiara': [],
+    '5فايف ستار': [],
+    'تيارا': [],
     'البسكويت': [],
     'الشوكولاتة': [],
     'الحلويات': []
   };
   const unavailable = {
     'المشروبات': [],
-    '5Star_Tiara': [],
+    '5فايف ستار': [],
+    'تيارا': [],
     'البسكويت': [],
     'الشوكولاتة': [],
     'الحلويات': []
@@ -272,8 +276,10 @@ async function handleSubmit(event) {
 
   dataToSubmit.availableDrinks = available['المشروبات'].join(', ');
   dataToSubmit.unavailableDrinks = unavailable['المشروبات'].join(', ');
-  dataToSubmit.available5StarTiara = available['5Star_Tiara'].join(', ');
-  dataToSubmit.unavailable5StarTiara = unavailable['5Star_Tiara'].join(', ');
+  dataToSubmit.available5Star = available['5فايف ستار'].join(', ');
+  dataToSubmit.unavailable5Star = unavailable['5فايف ستار'].join(', ');
+  dataToSubmit.availableTiara = available['تيارا'].join(', ');
+  dataToSubmit.unavailableTiara = unavailable['تيارا'].join(', ');
   dataToSubmit.availableBiscuits = available['البسكويت'].join(', ');
   dataToSubmit.unavailableBiscuits = unavailable['البسكويت'].join(', ');
   dataToSubmit.availableChocolates = available['الشوكولاتة'].join(', ');

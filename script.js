@@ -1,4 +1,4 @@
-const GOOGLE_SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyzfhc9PMUUQ9Ty3hopsrYmd1XLZAhAr0nqZK1zfg2qYyZ079TPuPQMRdqY2jv6Ui4xVw/exec';
+const GOOGLE_SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyounw2-fv8EZeuKGpSKizMdZnmUnwdj7Nhf_O-6mMiWpgfDZbml9DIuMTkIuTIIxvgsQ/exec';
 
 let productsData = [];
 let salesRepresentatives = [];

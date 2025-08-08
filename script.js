@@ -207,9 +207,7 @@ function validateProductStatuses() {
   }
 
   return allValid;
-}
-
-async function handleSubmit(event) {
+}async function handleSubmit(event) {
   event.preventDefault();
   if (!visitForm.checkValidity()) {
     visitForm.reportValidity();
@@ -296,20 +294,26 @@ async function handleSubmit(event) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(dataToSubmit),
-      redirect: "follow"
+      redirect: "follow",
+      credentials: 'omit'
     });
 
+    console.log('Response received. status:', response.status);
+    console.log('Response OK:', response.ok);
+
     const responseText = await response.text();
+    console.log('Response Text:', responseText);
+
     let result;
-    
     try {
       result = JSON.parse(responseText);
-    } catch {
-      // إذا لم يكن الرد بصيغة JSON، افترض أن هناك خطأً
+      console.log('JSON parsing successful.');
+    } catch (e) {
+      console.error('JSON parsing failed:', e);
       throw new Error('رد غير متوقع من الخادم.');
     }
     
-    console.log('Server response:', result);
+    console.log('Server response after JSON parsing:', result);
     
     if (result && result.success) {
       showSuccessMessage();
@@ -318,6 +322,7 @@ async function handleSubmit(event) {
       const checkboxes = productCategoriesDiv.querySelectorAll('input[type="checkbox"]');
       checkboxes.forEach(c => c.checked = false);
     } else {
+      console.log('Server returned an error:', result.error);
       showErrorMessage(result.error || 'فشل في حفظ البيانات.');
     }
 

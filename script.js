@@ -288,9 +288,10 @@ async function handleSubmit(event) {
   dataToSubmit.availableSweets = available['الحلويات'].join(', ');
   dataToSubmit.unavailableSweets = unavailable['الحلويات'].join(', ');
 
-  console.log('Final data to submit:', dataToSubmit);
+  console.log('✅ البيانات النهائية للإرسال:', dataToSubmit);
 
   try {
+    console.log('ℹ️ إرسال الطلب الآن...');
     const response = await fetch(GOOGLE_SHEETS_WEB_APP_URL, {
       method: 'POST',
       headers: {
@@ -300,12 +301,14 @@ async function handleSubmit(event) {
       redirect: "follow"
     });
 
+    console.log('✅ تم استلام رد من الخادم. حالة الرد:', response.status);
+
     if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const result = await response.json();
-    console.log('Server response:', result);
+    console.log('✅ استجابة الخادم بنجاح:', result);
     
     if (result.success) {
       showSuccessMessage();
@@ -318,7 +321,7 @@ async function handleSubmit(event) {
     }
 
   } catch (error) {
-    console.error('فشل الإرسال:', error);
+    console.error('❌ فشل الإرسال. الخطأ هو:', error);
     showErrorMessage('حدث خطأ أثناء إرسال البيانات. حاول مرة أخرى.');
   } finally {
     submitBtn.disabled = false;

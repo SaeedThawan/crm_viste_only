@@ -161,7 +161,6 @@ function toggleProductsDisplay(category, isChecked) {
   }
 }
 
-// تم حذف التحقق من حالة المنتجات
 function validateProductStatuses() {
   return true;
 }
@@ -171,6 +170,12 @@ async function handleSubmit(event) {
   
   submitBtn.disabled = true;
   loadingSpinner.classList.remove('hidden');
+
+  // يتم مسح النموذج هنا فوراً بعد الضغط على زر الإرسال
+  visitForm.reset();
+  productsDisplayDiv.innerHTML = '';
+  const checkboxes = productCategoriesDiv.querySelectorAll('input[type="checkbox"]');
+  checkboxes.forEach(c => c.checked = false);
 
   const now = new Date();
   const selectedCustomer = customersMain.find(c => c.Customer_Name_AR === customerNameInput.value);
@@ -250,13 +255,8 @@ async function handleSubmit(event) {
     });
 
     if (response.ok) {
-      // إذا نجح الإرسال، يتم إفراغ النموذج فقط
-      visitForm.reset();
-      productsDisplayDiv.innerHTML = '';
-      const checkboxes = productCategoriesDiv.querySelectorAll('input[type="checkbox"]');
-      checkboxes.forEach(c => c.checked = false);
+      console.log('تم إرسال البيانات بنجاح في الخلفية.');
     }
-    // لا يتم فعل شيء آخر سواء نجح الإرسال أو فشل
   } catch (error) {
     console.error('فشل الإرسال:', error);
   } finally {

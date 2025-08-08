@@ -251,7 +251,7 @@ async function handleSubmit(event) {
     }
   });
 
-  // بناء كائن البيانات للإرسال بنفس ترتيب الأعمدة في code.gs
+  // بناء كائن البيانات للإرسال
   const dataToSubmit = {
     visitID: generateVisitID(),
     customerCode: customerCode,

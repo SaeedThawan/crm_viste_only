@@ -226,37 +226,14 @@ async function handleSubmit(event) {
   const selectedCustomer = customersMain.find(c => c.Customer_Name_AR === customerNameInput.value);
   const customerCode = selectedCustomer ? selectedCustomer.Customer_Code : '';
 
-  const dataToSubmit = {
-    visitID: generateVisitID(),
-    customerCode: customerCode,
-    customerName: customerNameInput.value,
-    salesRepName: salesRepNameSelect.value,
-    visitDate: formatDate(now),
-    visitTime: formatTime(now),
-    visitPurpose: visitPurposeSelect.value,
-    visitOutcome: visitOutcomeSelect.value,
-    visitType: visitTypeSelect.value,
-    entryUserName: entryUserNameInput.value,
-    timestamp: formatTimestamp(now),
-    customerType: customerTypeInput.value,
-    notes: notesInput.value || ''
-  };
-
+  // جمع حالات توفر المنتجات
   const available = {
-    'المشروبات': [],
-    '5فايف ستار': [],
-    'تيارا': [],
-    'البسكويت': [],
-    'الشوكولاتة': [],
-    'الحلويات': []
+    'المشروبات': [], '5فايف ستار': [], 'تيارا': [],
+    'البسكويت': [], 'الشوكولاتة': [], 'الحلويات': []
   };
   const unavailable = {
-    'المشروبات': [],
-    '5فايف ستار': [],
-    'تيارا': [],
-    'البسكويت': [],
-    'الشوكولاتة': [],
-    'الحلويات': []
+    'المشروبات': [], '5فايف ستار': [], 'تيارا': [],
+    'البسكويت': [], 'الشوكولاتة': [], 'الحلويات': []
   };
 
   const items = productsDisplayDiv.querySelectorAll('.product-item');
@@ -274,18 +251,34 @@ async function handleSubmit(event) {
     }
   });
 
-  dataToSubmit.availableDrinks = available['المشروبات'].join(', ');
-  dataToSubmit.unavailableDrinks = unavailable['المشروبات'].join(', ');
-  dataToSubmit.available5Star = available['5فايف ستار'].join(', ');
-  dataToSubmit.unavailable5Star = unavailable['5فايف ستار'].join(', ');
-  dataToSubmit.availableTiara = available['تيارا'].join(', ');
-  dataToSubmit.unavailableTiara = unavailable['تيارا'].join(', ');
-  dataToSubmit.availableBiscuits = available['البسكويت'].join(', ');
-  dataToSubmit.unavailableBiscuits = unavailable['البسكويت'].join(', ');
-  dataToSubmit.availableChocolates = available['الشوكولاتة'].join(', ');
-  dataToSubmit.unavailableChocolates = unavailable['الشوكولاتة'].join(', ');
-  dataToSubmit.availableSweets = available['الحلويات'].join(', ');
-  dataToSubmit.unavailableSweets = unavailable['الحلويات'].join(', ');
+  // بناء كائن البيانات للإرسال بنفس ترتيب الأعمدة في code.gs
+  const dataToSubmit = {
+    visitID: generateVisitID(),
+    customerCode: customerCode,
+    customerName: customerNameInput.value,
+    salesRepName: salesRepNameSelect.value,
+    visitDate: formatDate(now),
+    visitTime: formatTime(now),
+    visitPurpose: visitPurposeSelect.value,
+    visitOutcome: visitOutcomeSelect.value,
+    visitType: visitTypeSelect.value,
+    availableDrinks: available['المشروبات'].join(', '),
+    unavailableDrinks: unavailable['المشروبات'].join(', '),
+    available5Star: available['5فايف ستار'].join(', '),
+    unavailable5Star: unavailable['5فايف ستار'].join(', '),
+    availableTiara: available['تيارا'].join(', '),
+    unavailableTiara: unavailable['تيارا'].join(', '),
+    availableBiscuits: available['البسكويت'].join(', '),
+    unavailableBiscuits: unavailable['البسكويت'].join(', '),
+    availableChocolates: available['الشوكولاتة'].join(', '),
+    unavailableChocolates: unavailable['الشوكولاتة'].join(', '),
+    availableSweets: available['الحلويات'].join(', '),
+    unavailableSweets: unavailable['الحلويات'].join(', '),
+    entryUserName: entryUserNameInput.value,
+    timestamp: formatTimestamp(now),
+    customerType: customerTypeInput.value,
+    notes: notesInput.value || ''
+  };
 
   console.log('Final data to submit:', dataToSubmit);
 
@@ -296,8 +289,7 @@ async function handleSubmit(event) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(dataToSubmit),
-      redirect: "follow",
-      credentials: 'omit'
+      redirect: "follow"
     });
 
     const responseText = await response.text();

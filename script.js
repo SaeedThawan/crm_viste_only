@@ -23,33 +23,30 @@ const submitBtn = document.getElementById('submitBtn');
 const loadingSpinner = document.getElementById('loadingSpinner');
 
 function showSuccessMessage() {
-  // تم إزالة عرض الرسالة للتحقق
-  // Swal.fire({
-  //   title: '✅ تم الإرسال!',
-  //   text: 'تم إرسال النموذج بنجاح.',
-  //   icon: 'success',
-  //   confirmButtonText: 'ممتاز'
-  // });
+  Swal.fire({
+    title: '✅ تم الإرسال!',
+    text: 'تم إرسال النموذج بنجاح.',
+    icon: 'success',
+    confirmButtonText: 'ممتاز'
+  });
 }
 
 function showErrorMessage(message) {
-  // تم إزالة عرض الرسالة للتحقق
-  // Swal.fire({
-  //   title: '❌ فشل الإرسال',
-  //   text: message || 'حدث خطأ أثناء إرسال النموذج. حاول مجددًا.',
-  //   icon: 'error',
-  //   confirmButtonText: 'موافق'
-  // });
+  Swal.fire({
+    title: '❌ فشل الإرسال',
+    text: message || 'حدث خطأ أثناء إرسال النموذج. حاول مجددًا.',
+    icon: 'error',
+    confirmButtonText: 'موافق'
+  });
 }
 
 function showWarningMessage(message) {
-  // تم إزالة عرض الرسالة للتحقق
-  // Swal.fire({
-  //   title: '⚠️ تنبيه',
-  //   text: message,
-  //   icon: 'warning',
-  //   confirmButtonText: 'موافق'
-  // });
+  Swal.fire({
+    title: '⚠️ تنبيه',
+    text: message,
+    icon: 'warning',
+    confirmButtonText: 'موافق'
+  });
 }
 
 function generateVisitID() {
@@ -293,7 +290,7 @@ async function handleSubmit(event) {
   console.log('Final data to submit:', dataToSubmit);
 
   try {
-    await fetch(GOOGLE_SHEETS_WEB_APP_URL, {
+    const response = await fetch(GOOGLE_SHEETS_WEB_APP_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'text/plain;charset=utf-8',
@@ -301,14 +298,27 @@ async function handleSubmit(event) {
       body: JSON.stringify(dataToSubmit),
       redirect: "follow"
     });
-    // هنا تم إزالة معالجة الرد تمامًا
-    visitForm.reset();
-    productsDisplayDiv.innerHTML = '';
-    const checkboxes = productCategoriesDiv.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(c => c.checked = false);
+
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log('Server response:', result);
+    
+    if (result.success) {
+      showSuccessMessage();
+      visitForm.reset();
+      productsDisplayDiv.innerHTML = '';
+      const checkboxes = productCategoriesDiv.querySelectorAll('input[type="checkbox"]');
+      checkboxes.forEach(c => c.checked = false);
+    } else {
+      showErrorMessage(result.error);
+    }
 
   } catch (error) {
     console.error('فشل الإرسال:', error);
+    showErrorMessage('حدث خطأ أثناء إرسال البيانات. حاول مرة أخرى.');
   } finally {
     submitBtn.disabled = false;
     loadingSpinner.classList.add('hidden');

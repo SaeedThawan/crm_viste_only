@@ -1,5 +1,5 @@
 // الروابط والمتغيرات العامة
-const GOOGLE_SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyounw2-fv8EZeuKGpSKizMdZnmUnwdj7Nhf_O-6mMiWpgfDZbml9DIuMTkIuTIIxvgsQ/exec';
+const GOOGLE_SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyjqnMVN2SjDfVzlUUFqFg3ov5clHscr7vP6LpeMfXLyfcl-8MVoqfRYHzryhzT9s3h5Q/exec';
 
 let productsData = [];
 let salesRepresentatives = [];
@@ -333,3 +333,4 @@ document.addEventListener('DOMContentLoaded', () => {
   loadAllData();
   visitForm.addEventListener('submit', handleSubmit);
 });
+

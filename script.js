@@ -293,27 +293,32 @@ async function handleSubmit(event) {
     const response = await fetch(GOOGLE_SHEETS_WEB_APP_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'text/plain;charset=utf-8',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(dataToSubmit),
       redirect: "follow"
     });
 
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+    const responseText = await response.text();
+    let result;
+    
+    try {
+      result = JSON.parse(responseText);
+    } catch {
+      // إذا لم يكن الرد بصيغة JSON، افترض أن هناك خطأً
+      throw new Error('رد غير متوقع من الخادم.');
     }
-
-    const result = await response.json();
+    
     console.log('Server response:', result);
     
-    if (result.success) {
+    if (result && result.success) {
       showSuccessMessage();
       visitForm.reset();
       productsDisplayDiv.innerHTML = '';
       const checkboxes = productCategoriesDiv.querySelectorAll('input[type="checkbox"]');
       checkboxes.forEach(c => c.checked = false);
     } else {
-      showErrorMessage(result.error);
+      showErrorMessage(result.error || 'فشل في حفظ البيانات.');
     }
 
   } catch (error) {

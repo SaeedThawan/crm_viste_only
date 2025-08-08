@@ -1,4 +1,3 @@
-// الروابط والمتغيرات العامة
 const GOOGLE_SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyounw2-fv8EZeuKGpSKizMdZnmUnwdj7Nhf_O-6mMiWpgfDZbml9DIuMTkIuTIIxvgsQ/exec';
 
 let productsData = [];
@@ -23,7 +22,32 @@ const productsDisplayDiv = document.getElementById('productsDisplay');
 const submitBtn = document.getElementById('submitBtn');
 const loadingSpinner = document.getElementById('loadingSpinner');
 
-// تم حذف جميع دوال عرض الرسائل
+function showSuccessMessage() {
+  Swal.fire({
+    title: '✅ تم الإرسال!',
+    text: 'تم إرسال النموذج بنجاح.',
+    icon: 'success',
+    confirmButtonText: 'ممتاز'
+  });
+}
+
+function showErrorMessage(message) {
+  Swal.fire({
+    title: '❌ فشل الإرسال',
+    text: message || 'حدث خطأ أثناء إرسال النموذج. حاول مجددًا.',
+    icon: 'error',
+    confirmButtonText: 'موافق'
+  });
+}
+
+function showWarningMessage(message) {
+  Swal.fire({
+    title: '⚠️ تنبيه',
+    text: message,
+    icon: 'warning',
+    confirmButtonText: 'موافق'
+  });
+}
 
 function generateVisitID() {
   const timestamp = new Date().getTime();
@@ -50,6 +74,7 @@ async function fetchJsonData(url) {
     return await response.json();
   } catch (error) {
     console.error(`خطأ في تحميل ${url}:`, error);
+    showErrorMessage(`فشل تحميل البيانات من ${url}`);
     return [];
   }
 }
@@ -149,8 +174,8 @@ function toggleProductsDisplay(category, isChecked) {
       productDiv.innerHTML = `
         <label>${product.Product_Name_AR}</label>
         <div class="radio-group">
-          <label><input type="radio" name="status-${productId}" value="متوفر"> متوفر</label>
-          <label><input type="radio" name="status-${productId}" value="غير متوفر"> غير متوفر</label>
+          <label><input type="radio" name="status-${productId}" value="متوفر" required> متوفر</label>
+          <label><input type="radio" name="status-${productId}" value="غير متوفر" required> غير متوفر</label>
         </div>
       `;
       productsDisplayDiv.appendChild(productDiv);
@@ -162,20 +187,40 @@ function toggleProductsDisplay(category, isChecked) {
 }
 
 function validateProductStatuses() {
-  return true;
+  const items = productsDisplayDiv.querySelectorAll('.product-item');
+  if (items.length === 0) return true;
+
+  let allValid = true;
+  items.forEach(div => {
+    const radios = div.querySelectorAll('input[type="radio"]');
+    const checked = [...radios].some(r => r.checked);
+    if (!checked) {
+      allValid = false;
+      div.style.border = '2px solid red';
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => (div.style.border = ''), 3000);
+    }
+  });
+
+  if (!allValid) {
+    showWarningMessage('يرجى تحديد حالة التوفر لكل المنتجات الظاهرة.');
+  }
+
+  return allValid;
 }
 
 async function handleSubmit(event) {
   event.preventDefault();
-  
+  if (!visitForm.checkValidity()) {
+    visitForm.reportValidity();
+    showWarningMessage('يرجى تعبئة جميع الحقول المطلوبة.');
+    return;
+  }
+
+  if (!validateProductStatuses()) return;
+
   submitBtn.disabled = true;
   loadingSpinner.classList.remove('hidden');
-
-  // يتم مسح النموذج هنا فوراً بعد الضغط على زر الإرسال
-  visitForm.reset();
-  productsDisplayDiv.innerHTML = '';
-  const checkboxes = productCategoriesDiv.querySelectorAll('input[type="checkbox"]');
-  checkboxes.forEach(c => c.checked = false);
 
   const now = new Date();
   const selectedCustomer = customersMain.find(c => c.Customer_Name_AR === customerNameInput.value);
@@ -254,11 +299,26 @@ async function handleSubmit(event) {
       redirect: "follow"
     });
 
-    if (response.ok) {
-      console.log('تم إرسال البيانات بنجاح في الخلفية.');
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
     }
+
+    const result = await response.json();
+    console.log('Server response:', result);
+    
+    if (result.success) {
+      showSuccessMessage();
+      visitForm.reset();
+      productsDisplayDiv.innerHTML = '';
+      const checkboxes = productCategoriesDiv.querySelectorAll('input[type="checkbox"]');
+      checkboxes.forEach(c => c.checked = false);
+    } else {
+      showErrorMessage(result.error);
+    }
+
   } catch (error) {
     console.error('فشل الإرسال:', error);
+    showErrorMessage('حدث خطأ أثناء إرسال البيانات. حاول مرة أخرى.');
   } finally {
     submitBtn.disabled = false;
     loadingSpinner.classList.add('hidden');

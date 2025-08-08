@@ -207,7 +207,9 @@ function validateProductStatuses() {
   }
 
   return allValid;
-}async function handleSubmit(event) {
+}
+
+async function handleSubmit(event) {
   event.preventDefault();
   if (!visitForm.checkValidity()) {
     visitForm.reportValidity();
@@ -298,18 +300,12 @@ function validateProductStatuses() {
       credentials: 'omit'
     });
 
-    console.log('Response received. status:', response.status);
-    console.log('Response OK:', response.ok);
-
     const responseText = await response.text();
-    console.log('Response Text:', responseText);
-
     let result;
+    
     try {
       result = JSON.parse(responseText);
-      console.log('JSON parsing successful.');
     } catch (e) {
-      console.error('JSON parsing failed:', e);
       throw new Error('رد غير متوقع من الخادم.');
     }
     

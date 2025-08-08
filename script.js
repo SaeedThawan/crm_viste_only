@@ -265,7 +265,7 @@ async function handleSubmit(event) {
     const name = div.querySelector('label').textContent;
     const category = div.getAttribute('data-category');
     const selected = div.querySelector('input[type="radio"]:checked');
-    
+    
     if (selected) {
       if (selected.value === 'متوفر') {
         available[category].push(name);
@@ -288,28 +288,25 @@ async function handleSubmit(event) {
   dataToSubmit.availableSweets = available['الحلويات'].join(', ');
   dataToSubmit.unavailableSweets = unavailable['الحلويات'].join(', ');
 
-  console.log('✅ البيانات النهائية للإرسال:', dataToSubmit);
+  console.log('Final data to submit:', dataToSubmit);
 
   try {
-    console.log('ℹ️ إرسال الطلب الآن...');
     const response = await fetch(GOOGLE_SHEETS_WEB_APP_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json', // ✅ تم تصحيح هذا السطر
+        'Content-Type': 'text/plain;charset=utf-8',
       },
       body: JSON.stringify(dataToSubmit),
       redirect: "follow"
     });
-
-    console.log('✅ تم استلام رد من الخادم. حالة الرد:', response.status);
 
     if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const result = await response.json();
-    console.log('✅ استجابة الخادم بنجاح:', result);
-    
+    console.log('Server response:', result);
+    
     if (result.success) {
       showSuccessMessage();
       visitForm.reset();
@@ -321,7 +318,7 @@ async function handleSubmit(event) {
     }
 
   } catch (error) {
-    console.error('❌ فشل الإرسال. الخطأ هو:', error);
+    console.error('فشل الإرسال:', error);
     showErrorMessage('حدث خطأ أثناء إرسال البيانات. حاول مرة أخرى.');
   } finally {
     submitBtn.disabled = false;
@@ -333,4 +330,6 @@ document.addEventListener('DOMContentLoaded', () => {
   loadAllData();
   visitForm.addEventListener('submit', handleSubmit);
 });
-
+هذا هو الكود الشغال لكن فيه مشكله في ارسال رساله الخطاء لما يكون في مشكله 
+بالاضافه الى ان الرابط فيه قديم المفروض تغير الرابط 
+بالرابط الي اعديته لك في الرساله السابقه

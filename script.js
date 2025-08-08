@@ -293,7 +293,7 @@ async function handleSubmit(event) {
     const response = await fetch(GOOGLE_SHEETS_WEB_APP_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json', // هذا هو التعديل المطلوب
+        'Content-Type': 'text/plain;charset=utf-8', // تم تصحيح هذا السطر
       },
       body: JSON.stringify(dataToSubmit),
       redirect: "follow"

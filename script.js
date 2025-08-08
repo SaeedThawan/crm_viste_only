@@ -293,7 +293,7 @@ async function handleSubmit(event) {
     const response = await fetch(GOOGLE_SHEETS_WEB_APP_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'text/plain;charset=utf-8',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(dataToSubmit),
       redirect: "follow"
@@ -306,14 +306,14 @@ async function handleSubmit(event) {
     const result = await response.json();
     console.log('Server response:', result);
     
-    if (result.success) {
+    if (result.status === 'success') {
       showSuccessMessage();
       visitForm.reset();
       productsDisplayDiv.innerHTML = '';
       const checkboxes = productCategoriesDiv.querySelectorAll('input[type="checkbox"]');
       checkboxes.forEach(c => c.checked = false);
     } else {
-      showErrorMessage(result.error);
+      showErrorMessage(result.message);
     }
 
   } catch (error) {

@@ -160,16 +160,46 @@ body {
   }
 }
 
-/* 🌙 تحضير الوضع الداكن */
+/* 🌞 قائمة اختيار العميل في الوضع النهاري */
+#customerListContainer ul {
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 0.75rem;
+  color: #374151;
+  max-height: 300px;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  list-style: none; /* إزالة النقاط */
+}
+
+#customerListContainer li {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.2s ease;
+}
+
+#customerListContainer li:last-child {
+    border-bottom: none;
+}
+
+#customerListContainer li:hover {
+  background-color: #f3f4f6;
+}
+
+/* 🌙 الوضع الداكن */
 @media (prefers-color-scheme: dark) {
   body {
     background-color: #111827;
     color: #f3f4f6;
   }
+
   .container {
     background-color: #1f2937;
     box-shadow: none;
   }
+
   .form-group input,
   .form-group select,
   .form-group textarea {
@@ -177,18 +207,49 @@ body {
     color: #f3f4f6;
     border-color: #4b5563;
   }
+
   .product-item {
     background-color: #2d3748;
     border-color: #4b5563;
     color: #f3f4f6;
   }
+
   .product-item label {
     color: #f3f4f6;
   }
+
   .radio-group label {
     color: #f3f4f6;
   }
+
   .radio-group input[type="radio"] {
     accent-color: #6366f1;
+  }
+
+  /* 🌙 قائمة اختيار العميل في الوضع الليلي */
+  #customerListContainer ul {
+    background-color: #374151;
+    border: 1px solid #4b5563;
+    border-radius: 0.75rem;
+    color: #f3f4f6;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    z-index: 50;
+  }
+
+  #customerListContainer li {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid #4b5563;
+    transition: background-color 0.2s ease;
+  }
+  
+  #customerListContainer li:last-child {
+      border-bottom: none;
+  }
+
+  #customerListContainer li:hover {
+    background-color: #4b5563;
   }
 }
